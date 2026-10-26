@@ -1,0 +1,36 @@
+*** Comments ***
+SBL r5fss0-0_nortos TEST FILE
+
+*** Settings ***
+Documentation    Suite for SBL r5fss0-0_nortos TESTING
+
+# ------------- Resource Files ---------------------
+Resource    test_infra.resource
+
+# ------------- Setup and Teardown ---------------------
+Test Setup    INFRA_TEST_SETUP
+Test Teardown    INFRA_TEST_TEARDOWN
+
+*** Variables ***
+
+${DEVICE_TYPE}    ${{ 'hs' if 'hsse' in '${PLATFORM}' else 'hs_fs' }}
+${CFG_FILE}    ${SDK_PATH}/tools/boot/sbl_prebuilt/am62x-sip-sk/default_sbl_ospi_${DEVICE_TYPE}.cfg
+
+*** Test Cases ***
+Bootloader: SBL OSPI NOR
+	[Tags]    board:am62x-sip-sk    core:r5fss0-0_nortos    component:SBL    app_name:sbl_ospi_stage2    SITSW-4498
+	[Timeout]    1000
+	DUT ON
+	CHANGE BOOT MODE    ${UART_BOOT_MODE}
+	DUT OFF
+	DUT ON
+	Sleep    2s
+	UartUniFlash.WITH CFG    ${USB0}    ${UartUniFlashPath}    ${CFG_FILE}
+	DUTUSB0.CONNECT TO UART PORT    ${USB0}
+	DUTUSB2.CONNECT TO UART PORT    ${USB2}
+	CHANGE BOOT MODE    ${OSPI_NOR_BOOT_MODE}
+	DUT OFF
+	DUT ON
+	DUTUSB0.EXPECT STRING AT UART PORT    Starting MCU-m4f and 2nd stage bootloader    100
+	DUTUSB0.EXPECT STRING AT UART PORT    Starting RTOS/Baremetal applications    100
+	DUTUSB2.EXPECT STRING AT UART PORT    All tests have passed!!    100

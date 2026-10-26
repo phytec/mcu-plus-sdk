@@ -1,0 +1,49 @@
+{
+    "name": "MCU-PLUS-SDK-AM62X",
+    "displayName": "MCU+ SDK for AM62X",
+    "version": "12.01.00",
+    "documentationPath": "../docs",
+    "includePaths": [
+        "../source",
+        "../source/networking/enet/core/sysconfig",
+    ],
+    "components": [
+        "/board/board",
+        "/drivers/drivers",
+        "/fs/fs",
+        "/kernel/dpl",
+        "/networking/networking",
+    ],
+    "devices": [
+        "AM62x",
+        "AM62SIP",
+    ],
+    "contexts": {
+        "AM62x": [
+            "m4fss0-0",
+            "r5fss0-0",
+            "a53ss0-0",
+            "a53ss0-1",
+            "a53ss1-0",
+            "a53ss1-1",
+        ],
+        "AM62SIP": [
+            "m4fss0-0",
+            "r5fss0-0",
+            "a53ss0-0",
+            "a53ss0-1",
+            "a53ss1-0",
+            "a53ss1-1",
+        ],
+
+
+    },
+    "pinmuxUIOptions": {
+        "group": "merged",
+        "hidePeripheralTab": false,
+        "showPinTable": true,
+        "showSignals": true,
+        "showUsed": true
+    },
+    "minToolVersion" : "1.26.2"
+}

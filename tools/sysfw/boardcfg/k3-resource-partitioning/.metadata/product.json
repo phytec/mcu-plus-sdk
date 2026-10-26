@@ -1,0 +1,148 @@
+{
+  "name": "K3-RESOURCE-CONFIGURATION",
+  "displayName": "Resource partitioning tool for Multi-Core SoCs",
+  "version": "1.2.0",
+  "includePaths": [
+    ".."
+  ],
+  "minToolVersion": "1.24.1",
+  "components": [
+    "/.meta/modules/respart"
+  ],
+  "devices": [
+    "AM243x_ALV_beta",
+    "AM64x",
+    "AM65xx_SR1.0",
+    "AM65xx_SR2.0_beta",
+    "J721E_DRA829_TDA4VM_AM752x",
+    "J7200_DRA821_SR1.0_alpha",
+    "AM62x",
+    "AM62SIP",
+    "J721S2_TDA4VE_TDA4AL_TDA4VL_AM68x",
+    "AM62Ax",
+    "J784S4_TDA4AP_TDA4VP_TDA4AH_TDA4VH_AM69x",
+    "J722S_TDA4VEN_TDA4AEN_AM67",
+    "AM62Px",
+    "AM275x",
+    "AM62Dx"
+  ],
+  "branding": {
+    "softwareTitle": "Resource partitioning tool for Multi-Core SoCs",
+    "icon": ".tirex/sysconfig.ico",
+    "links": [
+      {
+        "displayName": "Users Guide",
+        "actualLink": "https://dev.ti.com/tirex/local?id=k3_resource_configuration_users_guide&packageId=PROCESSORS-UTILITIES"
+      }
+    ],
+    "softwareDownloadLink": "https://dev.ti.com/tirex/install?packageId=K3-RESOURCE-CONFIGURATION&download=true"
+  },
+  "referenceDesigns": [
+    {
+      "path": "../out/am62a-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM62Ax",
+      "supportedDevices": [
+        "AM62Ax"
+      ]
+    },
+    {
+      "path": "../out/am62d-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM62Dx",
+      "supportedDevices": [
+        "AM62Dx"
+      ]
+    },
+    {
+      "path": "../out/am62p-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM62Px",
+      "supportedDevices": [
+        "AM62Px"
+      ]
+    },
+    {
+      "path": "../out/am62x-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM62x",
+      "supportedDevices": [
+        "AM62x",
+        "AM62SIP"
+      ]
+    },
+    {
+      "path": "../out/am275-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM275x",
+      "supportedDevices": [
+        "AM275x"
+      ]
+    },
+    {
+      "path": "../out/am243x-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM243x",
+      "supportedDevices": [
+        "AM243x_ALV_beta"
+      ]
+    },
+    {
+      "path": "../out/am64x-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM64x",
+      "supportedDevices": [
+        "AM64x"
+      ]
+    },
+    {
+      "path": "../out/am65x-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for AM65x",
+      "supportedDevices": [
+        "AM65xx_SR1.0",
+        "AM65xx_SR2.0_beta"
+      ]
+    },
+    {
+      "path": "../out/j722s-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for J722S / TDA4VEN / TDA4AEN / AM67",
+      "supportedDevices": [
+        "J722S_TDA4VEN_TDA4AEN_AM67"
+      ]
+    },
+    {
+      "path": "../out/j721e-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for J721E / DRA829 / TDA4VM / AM752x",
+      "supportedDevices": [
+        "J721E_DRA829_TDA4VM_AM752x"
+      ]
+    },
+    {
+      "path": "../out/j721s2-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for J721S2 / TDA4VE / TDA4AL / TDA4VL / AM68x",
+      "supportedDevices": [
+        "J721S2_TDA4VE_TDA4AL_TDA4VL_AM68x"
+      ]
+    },
+    {
+      "path": "../out/j784s4-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for J784S4 / TDA4AP / TDA4VP / TDA4AH / TDA4VH / AM69x",
+      "supportedDevices": [
+        "J784S4_TDA4AP_TDA4VP_TDA4AH_TDA4VH_AM69x"
+      ]
+    },
+    {
+      "path": "../out/j7200-evm.syscfg",
+      "displayName": "Latest Baseline Design",
+      "description": "Start from the latest baseline resource partitioning for J7200 / DRA821",
+      "supportedDevices": [
+        "J7200_DRA821_SR1.0_alpha"
+      ]
+    }
+  ]
+}

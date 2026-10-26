@@ -1,0 +1,51 @@
+[
+  {
+    "id": "K3-RESOURCE-CONFIGURATION",
+    "name": "Resource partitioning tool for Multi-Core SoCs",
+    "version": "1.2.0",
+    "type": "software",
+    "image": "./sysconfig.ico",
+    "description": "Tool for partitioning various system level resources to different software components in a multi-core SoC",
+    "metadataVersion": "3.1.0",
+    "tags": [
+      "AM243x_ALV_beta",
+      "AM64x",
+      "AM65xx_SR1.0",
+      "AM65xx_SR2.0_beta",
+      "J721E_DRA829_TDA4VM_AM752x",
+      "J7200_DRA821_SR1.0_alpha",
+      "AM62x",
+      "J721S2_TDA4VE_TDA4AL_TDA4VL_AM68x",
+      "AM62Ax",
+      "AM62Dx",
+      "J784S4_TDA4AP_TDA4VP_TDA4AH_TDA4VH_AM69x",
+      "J722S_TDA4VEN_TDA4AEN_AM67",
+      "AM62Px",
+      "AM275x",
+      "K3-RESOURCE-CONFIGURATION",
+      "Resource Configuration",
+      "Respart",
+      "K3-Respart-Tool",
+      "Resource Partitioning",
+      "QoS",
+      "Firewall",
+      "Resource Sharing"
+    ],
+    "devices": [
+      "AM243x_ALV_beta",
+      "AM64x",
+      "AM65xx_SR1.0",
+      "AM65xx_SR2.0_beta",
+      "J721E_DRA829_TDA4VM_AM752x",
+      "J7200_DRA821_SR1.0_alpha",
+      "AM62x",
+      "J721S2_TDA4VE_TDA4AL_TDA4VL_AM68x",
+      "AM62Ax",
+      "AM62Dx",
+      "J784S4_TDA4AP_TDA4VP_TDA4AH_TDA4VH_AM69x",
+      "J722S_TDA4VEN_TDA4AEN_AM67",
+      "AM62Px",
+      "AM275x"
+    ]
+  }
+]

@@ -1,0 +1,783 @@
+/*
+ *  Copyright (C) 2023-25 Texas Instruments Incorporated
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *    Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *    Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+/*
+ * SDL ESM
+ *
+ * Software Diagnostics Reference module for Error Signaling Module
+ *
+*/
+#include <stdint.h>
+#include <sdl/sdl_esm.h>
+#include <sdl/esm/sdlr_esm.h>
+#include <sdl/esm/sdl_esm_priv.h>
+#include "sdl_esm_soc.h"
+#include <sdl/include/hw_types.h>
+#include <sdl/dpl/sdl_dpl.h>
+
+#define BITS_PER_WORD (32u)
+
+#define SDL_ESM_EN_KEY_ENBALE_VAL (0xFU)
+#define ARRAY_SIZE (32u)
+#define INIT_VAL (0u)
+#define MASK_BIT (1u)
+#define STATUS_NUM (1u)
+
+/**
+ * Design: PROC_SDL-1058,PROC_SDL-1059
+ */
+int32_t SDL_ESM_getNErrorStatus(SDL_ESM_Inst instance, uint32_t *pStatus)
+{
+    uint32_t esmInstBaseAddr;
+    int32_t  retVal = SDL_EBADARGS;
+
+    if (instance < SDL_ESM_INSTANCE_MAX)
+    {
+        /*This function returns the Base address of ESM Instance Based on esmInstype*/
+        if (SDL_ESM_getBaseAddr(instance, &esmInstBaseAddr) == ((bool)true))
+        {
+            if (pStatus != ((void *) 0))
+            {
+                /* Return the status of nERROR pin of specified ESM instances*/
+                *pStatus = HW_RD_FIELD32(esmInstBaseAddr + SDL_ESM_PIN_STS, SDL_ESM_PIN_STS_VAL);
+                retVal =  SDL_PASS;
+            }
+        }
+    }
+    return retVal;
+}
+
+/* Read back the static config API implementation*/
+/*Returns the static register configuration for the ESM module for the specified instance.*/
+/**
+ * Design: PROC_SDL-1060,PROC_SDL-1061
+ */
+/*This API can be used by the application to read back the static config. */
+ int32_t SDL_ESM_getStaticRegisters(SDL_ESM_Inst instance, SDL_ESM_staticRegs *pStaticRegs)
+{
+    int32_t    retVal = SDL_EBADARGS;
+    uint32_t esmInstBaseAddr;
+
+    if (instance < SDL_ESM_INSTANCE_MAX)
+    {
+
+        if (SDL_ESM_getBaseAddr(instance, &esmInstBaseAddr) == ((bool)true))
+        {
+            /*Base address will assign to the Structure variable and Each structure variable 32bit wide*/
+            SDL_esmRegs *esmRegs = (SDL_esmRegs *) (uintptr_t)esmInstBaseAddr;
+            uint32_t  i;
+
+            if(pStaticRegs != ((void *) 0))
+            {
+                pStaticRegs->PID                        = esmRegs->PID;
+                pStaticRegs->INFO                       = esmRegs->INFO;
+                pStaticRegs->EN                         = esmRegs->EN;
+                pStaticRegs->ERR_EN_SET                 = esmRegs->ERR_EN_SET;
+                pStaticRegs->ERR_EN_CLR                 = esmRegs->ERR_EN_CLR;
+                pStaticRegs->LOW_PRI                    = esmRegs->LOW_PRI;
+                pStaticRegs->HI_PRI                     = esmRegs->HI_PRI;
+                pStaticRegs->LOW                        = esmRegs->LOW;
+                pStaticRegs->HI                         = esmRegs->HI;
+                pStaticRegs->PIN_CTRL                   = esmRegs->PIN_CTRL;
+                pStaticRegs->PIN_CNTR_PRE               = esmRegs->PIN_CNTR_PRE;
+                pStaticRegs->PWMH_PIN_CNTR_PRE          = esmRegs->PWMH_PIN_CNTR_PRE;
+                pStaticRegs->PWML_PIN_CNTR_PRE          = esmRegs->PWML_PIN_CNTR_PRE;
+
+                /*It reads Error group Register of ESM instances*/
+
+                for (i = ((uint32_t) (0u)); i < ESM_NUMBER_OF_GROUP_REGS; i++)
+                {
+                    pStaticRegs->ERR_GRP[i].RAW  = esmRegs->ERR_GRP[i].RAW;
+                    pStaticRegs->ERR_GRP[i].INTR_EN_SET  = esmRegs->ERR_GRP[i].INTR_EN_SET;
+                    pStaticRegs->ERR_GRP[i].INTR_EN_CLR  = esmRegs->ERR_GRP[i].INTR_EN_CLR;
+                    pStaticRegs->ERR_GRP[i].INT_PRIO    = esmRegs->ERR_GRP[i].INT_PRIO;
+                    pStaticRegs->ERR_GRP[i].PIN_EN_SET  = esmRegs->ERR_GRP[i].PIN_EN_SET;
+                    pStaticRegs->ERR_GRP[i].PIN_EN_CLR  = esmRegs->ERR_GRP[i].PIN_EN_CLR;
+                }
+                retVal = SDL_PASS;
+            }
+        }
+    }
+    return retVal;
+}
+
+/**
+ * Design: PROC_SDL-1062,PROC_SDL-1063
+ */
+/* Verifies the written config against the provided configuration */
+int32_t SDL_ESM_verifyConfig(SDL_ESM_Inst instance, const SDL_ESM_config *pConfig)
+{
+    uint32_t intStatus;
+    uint32_t esmMaxNumevents;
+    uint32_t i,j;
+    uint32_t esmInstBaseAddr;
+    esmIntrPriorityLvl_t intrPriorityLvlRd;
+    uint32_t influence;
+    int32_t result = SDL_EBADARGS;
+    uint32_t intNum;
+    int32_t SDLRet= SDL_PASS;
+    uint32_t enableRd;
+    esmIntrPriorityLvl_t intrPriorityLvlWr;
+    uint32_t enableWr;
+
+    /**
+     * Initialize appropriate esmInstBaseAddr for register base and
+     * SDM_ESM_instance for SW instance structure.
+     * Get Maximum number of events corresponding to the instance.
+     * Check for valid instance is done in SDL_ESM_getBaseAddr itself.
+     */
+    if (SDL_ESM_getBaseAddr(instance, &esmInstBaseAddr) == ((bool)false))
+    {
+        result = SDL_EBADARGS;
+    }
+    else
+    {
+        SDL_ESM_getMaxNumEvents(instance, &esmMaxNumevents);
+        /* ESM reset and configure */
+        for (i=0; i <= (esmMaxNumevents/BITS_PER_WORD); i++)
+        {
+            uint32_t remainingBits = esmMaxNumevents - (i*BITS_PER_WORD);
+
+            if (remainingBits > BITS_PER_WORD)
+            {
+                remainingBits = BITS_PER_WORD;
+            }
+
+            for (j=((uint32_t)NULL); j< remainingBits; j++)
+            {
+                intNum = (i*BITS_PER_WORD)+j;
+
+                SDLRet = SDL_ESM_isEnableIntr(esmInstBaseAddr, intNum, &intStatus);
+
+                enableWr = ((pConfig->enableBitmap[i] & (((uint32_t)MASK_BIT)<<j)) != 0u)?1u:0u;
+
+                if (intStatus == enableWr)
+                {
+                    intrPriorityLvlWr = ((pConfig->priorityBitmap[i]
+                                                                  & (((uint32_t)1u)<<j)) != 0u)?1u:0u;
+                    (void)SDL_ESM_getIntrPriorityLvl(esmInstBaseAddr,
+                                                        intNum,
+                                                        &intrPriorityLvlRd);
+
+                    if (intrPriorityLvlWr != intrPriorityLvlRd)
+                    {
+                        SDLRet = SDL_EFAIL;
+                    }
+
+                }
+                else
+                {
+                    SDLRet = SDL_EFAIL;
+                }
+
+                if (SDLRet == SDL_PASS)
+                {
+                    enableWr = ((pConfig->errorpinBitmap[i]
+                                 & (((uint32_t)MASK_BIT)<<j)) != 0u)?1u:0u;
+                    SDLRet = SDL_ESM_getInfluenceOnErrPin(esmInstBaseAddr,
+                                                          intNum,
+                                                          &influence);
+                }
+                if (SDLRet == SDL_PASS)
+                {
+                    enableRd = (influence != 0u)?1u:0u;
+                    if (enableWr != enableRd)
+                    {
+                        SDLRet = SDL_EFAIL;
+                    }
+                }
+                if (SDLRet != SDL_PASS)
+                {
+                    break;
+                }
+            }
+            if (SDLRet != SDL_PASS)
+            {
+                break;
+            }
+
+        }
+        result = SDLRet;
+    }
+    return result;
+}
+
+/**
+ * Design: PROC_SDL-1056,PROC_SDL-1057
+ */
+/* Function used to clear the nERROR pin */
+int32_t SDL_ESM_clrNError(SDL_ESM_Inst esmInstType)
+{
+    int32_t            result;
+    uint32_t           esmInstBaseAddr;
+    uint32_t           status;
+
+    if (SDL_ESM_getBaseAddr(esmInstType, &esmInstBaseAddr) == ((bool)false))
+    {
+        result = SDL_EBADARGS;
+    }
+    else
+    {
+        result = SDL_ESM_resetErrPin((uint32_t)esmInstBaseAddr);
+        (void)SDL_ESM_getErrPinStatus((uint32_t)esmInstBaseAddr, &status);
+
+        /**
+         * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure
+         * TI_COVERAGE_UNIT_EFFECT This is the expected behaviour
+         */
+        if (status != ((uint32_t)1U))
+        {
+            result = SDL_EFAIL;
+        }
+        /* TI_COVERAGE_GAP_STOP */
+    }
+
+    return result;
+}
+
+/**
+ * Design: PROC_SDL-1054,PROC_SDL-1055
+ */
+/*      Function sets the nERROR pin active.    */
+int32_t SDL_ESM_setNError(SDL_ESM_Inst esmInstType)
+{
+    uint32_t esmInstBaseAddr;
+    int32_t retVal;
+
+    if (((esmInstType != SDL_ESM_INSTANCE_MAX) && (SDL_ESM_getBaseAddr(esmInstType, &esmInstBaseAddr) == ((bool)true))))
+    {
+        /* Set Force Error output */
+        retVal = SDL_ESM_setMode(esmInstBaseAddr, ESM_OPERATION_MODE_ERROR_FORCE);
+    }
+    else
+    {
+        retVal = SDL_EBADARGS;
+    }
+
+    return retVal;
+}
+
+/*
+* \fn      EsmInitHandlerInit
+*
+* \brief   Register all callbacks for an ESM instance
+*
+* \param   esmInstType: Instance type of ESM
+*
+* \return    0 : Success; < 0 for failures
+*/
+/*
+ * Design: PROC_SDL-1049
+ */
+
+static SDL_Result Esmhandlerinit(SDL_ESM_Inst esmInstType)
+{
+    static pSDL_DPL_HwipHandle SDL_ESM_HiHwiPHandle;
+    static pSDL_DPL_HwipHandle SDL_ESM_LoHwiPHandle;
+    static pSDL_DPL_HwipHandle SDL_ESM_CfgHwiPHandle;
+    SDL_Result result = SDL_EBADARGS;
+    int32_t intNumHi, intNumLo, intNumCfg;
+    SDL_DPL_HwipParams intrParams;
+    uint32_t esm_base_addr;
+    void (*pHiInterruptHandler)(void *);
+    void (*pLoInterruptHandler)(void *);
+    void (*pConfigInterruptHandler)(void *);
+
+    SDL_ESM_getBaseAddr(esmInstType, &esm_base_addr);
+
+    pHiInterruptHandler = &SDL_ESM_hiInterruptHandler;
+    pLoInterruptHandler = &SDL_ESM_loInterruptHandler;
+    pConfigInterruptHandler = &SDL_ESM_configInterruptHandler;
+
+    /* Get the interrupt number corresponding to ESM HI interrupt */
+    intNumHi = SDL_ESM_getIntNumber(esmInstType,
+                                    SDL_ESM_INT_TYPE_HI);
+
+    /* Get the interrupt number corresponding to ESM LO interrupt */
+    intNumLo = SDL_ESM_getIntNumber(esmInstType,
+                                    SDL_ESM_INT_TYPE_LO);
+
+    /* Get the interrupt number corresponding to ESM Config interrupt */
+    intNumCfg = SDL_ESM_getIntNumber(esmInstType,
+                                     SDL_ESM_INT_TYPE_CFG);
+
+    /* Clear all interrupts first */
+    (void)SDL_DPL_disableInterrupt(intNumHi);
+    (void)SDL_DPL_disableInterrupt(intNumLo);
+    (void)SDL_DPL_disableInterrupt(intNumCfg);
+
+    /* Deregister existing handlers to prevent resource leak on re-initialization */
+    if (SDL_ESM_HiHwiPHandle != NULL)
+    {
+        (void)SDL_DPL_deregisterInterrupt(SDL_ESM_HiHwiPHandle);
+        SDL_ESM_HiHwiPHandle = NULL;
+    }
+    if (SDL_ESM_LoHwiPHandle != NULL)
+    {
+        (void)SDL_DPL_deregisterInterrupt(SDL_ESM_LoHwiPHandle);
+        SDL_ESM_LoHwiPHandle = NULL;
+    }
+    if (SDL_ESM_CfgHwiPHandle != NULL)
+    {
+        (void)SDL_DPL_deregisterInterrupt(SDL_ESM_CfgHwiPHandle);
+        SDL_ESM_CfgHwiPHandle = NULL;
+    }
+
+    intrParams.intNum      = intNumHi;
+    intrParams.callback    = (*pHiInterruptHandler);
+    intrParams.callbackArg = esmInstType;
+
+    /* Register call back function for ESM Hi Interrupt */
+    result = SDL_DPL_registerInterrupt(&intrParams, &SDL_ESM_HiHwiPHandle);
+
+    if (result == SDL_PASS)
+    {
+        intrParams.intNum = intNumLo;
+        intrParams.callback = (*pLoInterruptHandler);
+        intrParams.callbackArg = esmInstType;
+
+        /* Register call back function for ESM Lo Interrupt */
+        result = SDL_DPL_registerInterrupt(&intrParams, &SDL_ESM_LoHwiPHandle);
+    }
+    if (result == SDL_PASS)
+    {
+        intrParams.intNum = intNumCfg;
+        intrParams.callback = (*pConfigInterruptHandler);
+        intrParams.callbackArg = esmInstType;
+
+        /* Register call back function for ESM Config Interrupt */
+        result = SDL_DPL_registerInterrupt(&intrParams, &SDL_ESM_CfgHwiPHandle);
+    }
+
+    /* Enable all ESM Interrupts */
+    if (result == SDL_PASS)
+    {
+        result = SDL_DPL_enableInterrupt(intNumHi);
+    }
+    if (result == SDL_PASS)
+    {
+        result = SDL_DPL_enableInterrupt(intNumLo);
+    }
+    if (result == SDL_PASS)
+    {
+        result = SDL_DPL_enableInterrupt(intNumCfg);
+    }
+
+    return result;
+}
+
+
+/** ============================================================================
+ *
+ * \brief   Initializes ESM module for SDL
+ *
+ * \param   esmInstType: Instance of ESM
+ * \param   esmInitConfig: Configuration for ESM
+ *
+ * \return  SDL_RETURN_PASS : Success; SDL_RETURN_FAIL for failures
+ */
+static SDL_Result ESM_init (const SDL_ESM_Inst esmInstType,
+                            const SDL_ESM_config *esmInitConfig,
+                            SDL_ESM_applicationCallback callback,
+                            void *arg)
+{
+    SDL_Result result = SDL_PASS;
+    int32_t SDLRet = SDL_PASS;
+    uint32_t intNum;
+    uint32_t i,j;
+    uint32_t intStatus;
+    esmIntrPriorityLvl_t intrPriorityLvlWr, intrPriorityLvlRd;
+    bool enableWr, enableRd;
+    uint32_t influence;
+    uint32_t esmInstBaseAddr;
+    uint32_t esmMaxNumevents;
+    SDL_ESM_Instance_t *SDL_ESM_Instance;
+
+    if(SDL_ESM_selectEsmInst(esmInstType, &SDL_ESM_Instance) == ((bool)false)){
+        result = SDL_EBADARGS;
+    }
+    /* Check for valid esmInstConfig and esmInstType, and initialize appropriate
+     * esmInstBaseAddr for register base and SDM_ESM_instance for SW instance structure. Also get Maximum number of events corresponding to the instance */
+    if (( esmInitConfig == ((void *)0u)) ||
+        ( SDL_ESM_getBaseAddr(esmInstType, &esmInstBaseAddr) == ((bool)false)))
+    {
+
+            result = SDL_EBADARGS;
+    }
+    else
+    {
+        SDL_ESM_getMaxNumEvents(esmInstType, &esmMaxNumevents);
+        /* Record init config in instance */
+        SDL_ESM_Instance->esmInitConfig.esmErrorConfig.bitNumber = esmInitConfig->esmErrorConfig.bitNumber;
+        SDL_ESM_Instance->esmInitConfig.esmErrorConfig.groupNumber = esmInitConfig->esmErrorConfig.groupNumber;
+        for(i=INIT_VAL;i<ARRAY_SIZE;i++){
+            SDL_ESM_Instance->esmInitConfig.enableBitmap[i] = esmInitConfig->enableBitmap[i];
+            SDL_ESM_Instance->esmInitConfig.priorityBitmap[i] = esmInitConfig->priorityBitmap[i];
+            SDL_ESM_Instance->esmInitConfig.errorpinBitmap[i] = esmInitConfig->errorpinBitmap[i];
+        }
+        SDL_ESM_Instance->callback = callback;
+        SDL_ESM_Instance->arg = arg;
+
+        /* ESM reset and configure */
+        (void)SDL_ESM_reset(esmInstBaseAddr);
+
+        /* Enable interrupt for all events from init configuration*/
+        for(i=((uint32_t)NULL); i <= (esmMaxNumevents/BITS_PER_WORD); i++)
+        {
+            uint32_t remainingBits = esmMaxNumevents - (i*BITS_PER_WORD);
+
+            /*
+             * Enable the configuration interrupt for this group.
+             * We discard the return values because it is guaranteed
+             * to succeed, due to prior checks of the parameters
+             */
+            SDL_ESM_clearCfgIntrStatus(esmInstBaseAddr, i);
+            SDL_ESM_getCfgIntrStatus(esmInstBaseAddr, i, &intStatus);
+            /**
+             * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure
+             * TI_COVERAGE_UNIT_EFFECT This is the expected behaviour
+             */
+            if (intStatus != ((uint32_t)0))
+            {
+                SDLRet = SDL_EFAIL;
+            }
+            /* TI_COVERAGE_GAP_STOP */
+            /**
+             * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on previous branch condition 
+             * TI_COVERAGE_UNIT_EFFECT Previous condition is dependent on hardware failure. This is the expected behaviour
+             */
+            if (SDLRet == SDL_PASS)
+            /* TI_COVERAGE_GAP_STOP */
+            {
+                /* Return values are discarded for same reasons as above */
+                SDL_ESM_enableCfgIntr(esmInstBaseAddr, i);
+                SDL_ESM_isEnableCfgIntr(esmInstBaseAddr, i, &intStatus);
+            }
+
+            if (remainingBits > BITS_PER_WORD){
+                remainingBits = BITS_PER_WORD;
+            }
+
+            for(j=((uint32_t)NULL); j< remainingBits; j++)
+            {
+                intNum = (i*BITS_PER_WORD)+j;
+
+                /* Clear interrupt status, so that we start with clean state */
+                (void)SDL_ESM_clearIntrStatus(esmInstBaseAddr, intNum);
+
+                (void)SDL_ESM_getIntrStatus(esmInstBaseAddr, intNum, &intStatus);
+
+
+                /* Depending on the bitmap configuration enable interrupt and set priority level */
+                if(((esmInitConfig->enableBitmap[i]) & (((uint32_t)MASK_BIT)<<j)) != 0u)
+                {
+                    /* Enable interrupt and verifiy if interrupt status is enabled */
+
+                    (void)SDL_ESM_enableIntr(esmInstBaseAddr, intNum);
+
+                    /* Previous checks ensure API success, so return value is discarded */
+                    SDL_ESM_isEnableIntr(esmInstBaseAddr, intNum, &intStatus);
+
+                    /**
+                     * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure
+                     * TI_COVERAGE_UNIT_EFFECT This is the expected behaviour
+                     */
+                    if (intStatus != ((uint32_t)STATUS_NUM))
+                    {
+                        SDLRet = SDL_EFAIL;
+                    }
+                    /* TI_COVERAGE_GAP_STOP */
+
+                    /* Set interrupt priority level and verifiy if priority level is set */
+                    /**
+                     * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on previous branch condition
+                     * TI_COVERAGE_UNIT_EFFECT Previous condition is dependent on hardware failure. This is the expected behaviour
+                     */
+                    if (SDLRet == SDL_PASS)
+                    /* TI_COVERAGE_GAP_STOP */
+                    {
+                        intrPriorityLvlWr = ((esmInitConfig->priorityBitmap[i]
+                                            & (((uint32_t)1u)<<j)) != 0u)?1u:0u;
+                        /* Previous checks ensure API success, so return values are discarded */
+                        SDL_ESM_setIntrPriorityLvl(esmInstBaseAddr,
+                                                   intNum,
+                                                   intrPriorityLvlWr);
+                        SDL_ESM_getIntrPriorityLvl(esmInstBaseAddr,
+                                                   intNum,
+                                                   &intrPriorityLvlRd);
+                        /**
+                         * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure
+                         * TI_COVERAGE_UNIT_EFFECT This is the expected behaviour
+                         */
+                        if (intrPriorityLvlWr != intrPriorityLvlRd)
+                        {
+                            SDLRet = SDL_EFAIL;
+                        }
+                        /* TI_COVERAGE_GAP_STOP */
+                    }
+                }
+
+                /*
+                 * Depending on the bitmap configuration set error output
+                 * and verify if error output is set */
+                /**
+                 * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on previous branch condition
+                 * TI_COVERAGE_UNIT_EFFECT Previous condition is dependent on hardware failure. This is the expected behaviour
+                 */
+                if (SDLRet == SDL_PASS)
+                /* TI_COVERAGE_GAP_STOP */
+                {
+                    enableWr = ((esmInitConfig->errorpinBitmap[i]
+                                 & (((uint32_t)MASK_BIT)<<j)) != 0u)?(bool)true:(bool)false;
+                    /* Previous checks ensure API success, so return values are discarded */
+                    SDL_ESM_setInfluenceOnErrPin(esmInstBaseAddr,
+                                                 intNum,
+                                                 enableWr);
+                    SDL_ESM_getInfluenceOnErrPin(esmInstBaseAddr,
+                                                 intNum,
+                                                 &influence);
+                    enableRd = (influence != 0u)?(bool)true:(bool)false;
+                    /**
+                     * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure
+                     * TI_COVERAGE_UNIT_EFFECT This is the expected behaviour
+                     */
+                    if (enableWr != enableRd)
+                    {
+                        SDLRet = SDL_EFAIL;
+                    }
+                    /* TI_COVERAGE_GAP_STOP */
+                }
+                /**
+                 * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on previous branch condition
+                 * TI_COVERAGE_UNIT_EFFECT Previous condition is dependent on hardware failure. This is the expected behaviour
+                 */
+                if (SDLRet != SDL_PASS)
+                {
+                    break;
+                }
+                /* TI_COVERAGE_GAP_STOP */
+            }
+        }
+
+        /* Enable Global interrupt and verify if global interrupt is enabled for ESM */
+        /**
+         * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on previous branch condition
+         * TI_COVERAGE_UNIT_EFFECT These conditions are dependent on hardware failure. This is the expected behaviour
+         */
+        if (SDLRet == SDL_PASS)
+        /* TI_COVERAGE_GAP_STOP */
+        {
+            /* Previous checks ensure API success, so return values are discarded */
+            SDL_ESM_enableGlobalIntr(esmInstBaseAddr);
+            SDL_ESM_getGlobalIntrEnabledStatus(esmInstBaseAddr, &intStatus);
+            /**
+             * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure
+             * TI_COVERAGE_UNIT_EFFECT This is the expected behaviour
+             */
+            if (intStatus != SDL_ESM_EN_KEY_ENBALE_VAL)
+            {
+                SDLRet = SDL_EFAIL;
+            }
+            /* TI_COVERAGE_GAP_STOP */
+        }
+        /**
+         * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on prior failures
+         * TI_COVERAGE_UNIT_EFFECT These prior failures are dependent on hardware failure. This is the expected behaviour
+         */
+        if (SDLRet != SDL_PASS)
+        {
+            result = SDL_EFAIL;
+        }
+        /* TI_COVERAGE_GAP_STOP */
+    }
+    return result;
+}
+
+/**
+ * Design: PROC_SDL-1064,PROC_SDL-1065
+ */
+int32_t SDL_ESM_registerECCCallback(SDL_ESM_Inst esmInstType,uint32_t eventBitmap[],
+                                    SDL_ESM_applicationCallback callBack,
+                                    void *callbackArg)
+{
+    uint8_t i;
+    SDL_Result result = SDL_PASS;
+    SDL_ESM_Instance_t *SDL_ESM_Instance;
+
+    if (SDL_ESM_selectEsmInst(esmInstType, &SDL_ESM_Instance) == ((bool)false))
+    {
+        result = SDL_EFAIL;
+    }
+    else
+    {
+        for(i=INIT_VAL;i<SDL_ESM_MAX_EVENT_MAP_NUM_WORDS;i++)
+        {
+            SDL_ESM_Instance->eccenableBitmap[i] = eventBitmap[i];
+        }
+        SDL_ESM_Instance->eccCallBackFunction = callBack;
+        SDL_ESM_Instance->eccCallBackFunctionArg = callbackArg;
+    }
+
+    return result;
+}
+
+/**
+ * Design: PROC_SDL-1050,PROC_SDL-1051,PROC_SDL-1052,PROC_SDL-1053,PROC_SDL-1119
+ */
+ int32_t SDL_ESM_init(SDL_ESM_Inst instance, const SDL_ESM_config *pConfig, SDL_ESM_applicationCallback applicationCallback, void *appArg)
+ {
+#if defined (M4F_CORE)
+	static SDL_ESM_Inst gInstances_name[] = {SDL_ESM_INST_WKUP_ESM0};
+#elif defined (R5F_CORE)
+    static SDL_ESM_Inst gInstances_name[] = {SDL_ESM_INST_MAIN_ESM0};
+#endif
+    int32_t retval;
+    if (applicationCallback == NULL)
+    {
+        retval = SDL_EBADARGS;
+    }
+    else
+    {
+        retval = ESM_init(instance,pConfig,applicationCallback,appArg);
+    }
+
+    if (retval == SDL_PASS)
+    {
+        uint32_t instances_name_size = sizeof(gInstances_name)/sizeof(SDL_ESM_Inst);
+        for (uint32_t i = 0; i < instances_name_size; i++)
+        {
+            if (gInstances_name[i] == instance)
+            {
+                retval = Esmhandlerinit(instance);
+                break;
+            }
+        }
+    }
+    return retval;
+ }
+
+/**
+ * Design: PROC_SDL-7376
+ */
+int32_t SDL_ESM_setPinOutMode(SDL_ESM_Inst instance, esmErrOutMode_t pinOutMode)
+{
+    int32_t    retVal = SDL_EBADARGS;
+    int32_t    sdlRet;
+    uint32_t   intStatus;
+    uint32_t   baseAddr;
+    uint32_t   pinOutVal;
+
+    if (((instance != SDL_ESM_INSTANCE_MAX) && (SDL_ESM_getBaseAddr(instance, &baseAddr) == ((bool)true))))
+    {
+        /* In SDL_ESM_init API, global interrupt are enabled so here
+           it should get disabled before change outPut mode.
+        */
+        /* Disable global interrupt, return value is discarded because previous check guarantees API to pass */
+        SDL_ESM_disableGlobalIntr(baseAddr);
+
+        if (pinOutMode == SDL_ESM_PWM_PINOUT)
+        {
+            /* Enable PWM error Ouptput */
+            HW_WR_FIELD32(baseAddr + SDL_ESM_PIN_CTRL, SDL_ESM_PIN_CTRL_PWM_EN, SDL_ESM_PWM_PINOUT);
+            /* Verify PWM error Ouptput */
+            pinOutVal = HW_RD_FIELD32(baseAddr + SDL_ESM_PIN_CTRL, SDL_ESM_PIN_CTRL_PWM_EN);
+
+            /**
+             * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on hardware failure,which is not possible to force in testing
+             * TI_COVERAGE_UNIT_EFFECT Since we can not force the condition in testing, pinOutVal == SDL_ESM_PWM_PINOUT will always be true.This is expected behaviour
+             */
+            if (pinOutVal == SDL_ESM_PWM_PINOUT)
+            /* TI_COVERAGE_GAP_STOP */
+            {
+                retVal = SDL_PASS;
+            }
+        }
+        else if(pinOutMode == SDL_ESM_LVL_PINOUT)
+        {
+            /* Enable LVL error Ouptput */
+            HW_WR_FIELD32(baseAddr + SDL_ESM_PIN_CTRL, SDL_ESM_PIN_CTRL_PWM_EN, SDL_ESM_LVL_PINOUT);
+            /* Verify PWM error Ouptput */
+            pinOutVal = HW_RD_FIELD32(baseAddr + SDL_ESM_PIN_CTRL, SDL_ESM_PIN_CTRL_PWM_EN);
+
+            /**
+             * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on hardware failure,which is not possible to force in testing
+             * TI_COVERAGE_UNIT_EFFECT Since we can not force the condition in testing, pinOutVal == SDL_ESM_LVL_PINOUT will always be true.This is expected behaviour
+             */
+            if (pinOutVal == SDL_ESM_LVL_PINOUT)
+            /* TI_COVERAGE_GAP_STOP */
+            {
+                retVal = SDL_PASS;
+            }
+        }
+        else
+        {
+            /*else condition has been added for satisfying misra compliance, MISRA.IF.NO_ELSE */
+        }
+        /* global interrupt are disabled, enable again global interrupt */
+        sdlRet = SDL_ESM_enableGlobalIntr(baseAddr);
+
+        /**
+         * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on hardware failure,which is not possible to force in testing
+         * TI_COVERAGE_UNIT_EFFECT Since we can not force the condition in testing, sdlRet == SDL_PASS will always be true.This is expected behaviour
+         */
+        if (sdlRet == SDL_PASS)
+        /* TI_COVERAGE_GAP_STOP */
+        {
+            sdlRet = SDL_ESM_getGlobalIntrEnabledStatus(baseAddr, &intStatus);
+        }
+
+        /**
+         * TI_COVERAGE_GAP_START [Branch Coverage] The branch condition is dependent on hardware failure,which is not possible to force in testing
+         * TI_COVERAGE_UNIT_EFFECT Since we can not force the condition in testing, sdlRet == SDL_PASS will always be true.This is expected behaviour
+         */
+        if (sdlRet == SDL_PASS)
+        /* TI_COVERAGE_GAP_STOP */
+        {
+
+        /**
+         * TI_COVERAGE_GAP_START [Branch/Statement Coverage] The branch condition is dependent on hardware failure,which is not possible to force in testing
+         * TI_COVERAGE_UNIT_EFFECT Since we can not force the condition in testing, intStatus will always be SDL_ESM_EN_KEY_ENBALE_VAL.This is expected behaviour
+         */
+            if (intStatus != SDL_ESM_EN_KEY_ENBALE_VAL)
+            {
+                sdlRet = SDL_EFAIL;
+            }
+        }
+        if (sdlRet != SDL_PASS)
+        {
+            retVal = SDL_EFAIL;
+        }
+        /* TI_COVERAGE_GAP_STOP */
+    }
+
+    return (retVal);
+}

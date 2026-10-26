@@ -1,0 +1,19 @@
+[
+    {
+        "email": "k3-respart-handoff@list.ti.com",
+        "submissionType" : "zip",
+        "replace": "true",
+        "localAssets": {
+            "all" : "~/ti/k3-resource-partitioning/K3_Resource_Config_1_0_0_all.zip"
+        },
+        "handoffChecklist" : {
+            "metadataChecklist" : "yes",
+            "schemaValidator" : "yes",
+            "urlValidator" : "yes",
+            "projectBuild" : "NA",
+            "packageInstall" : "yes",
+            "contentReviewed" : "no",
+            "projectWizard" : "no"
+        }
+    }
+]
