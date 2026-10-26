@@ -33,7 +33,9 @@
 #include <stdlib.h>
 #include <drivers/ipc_notify.h>
 #include <drivers/ipc_rpmsg.h>
+#include <drivers/sciclient.h>
 #include <kernel/dpl/DebugP.h>
+#include <kernel/dpl/SemaphoreP.h>
 #include <kernel/dpl/TaskP.h>
 #include "ti_drivers_config.h"
 #include "ti_board_config.h"
@@ -45,9 +47,13 @@
 
 #define MAIN_TASK_PRI               (configMAX_PRIORITIES-1)
 #define GPIO_LED_BLINK_TASK_PRI     (tskIDLE_PRIORITY + 2)
+#define LPM_SUSPEND_TASK_PRI        (tskIDLE_PRIORITY + 3)
 
 #define GPIO_STACK_SIZE (1024U)
 uint8_t gpio_xStack[GPIO_STACK_SIZE] __attribute__((aligned(32)));
+
+#define LPM_SUSPEND_STACK_SIZE (1024U)
+uint8_t lpm_suspend_xStack[LPM_SUSPEND_STACK_SIZE] __attribute__((aligned(32)));
 
 #define MAIN_TASK_SIZE (16384U/sizeof(configSTACK_DEPTH_TYPE))
 StackType_t gMainTaskStack[MAIN_TASK_SIZE] __attribute__((aligned(32)));
@@ -59,6 +65,9 @@ void gpio_led_blink(void *args);
 
 volatile uint8_t gbShutdown = 0u;
 volatile uint8_t gbShutdownRemotecoreID = 0u;
+volatile uint8_t gbSuspendRemotecoreID = 0u;
+
+SemaphoreP_Object gLpmSuspendSem;
 
 void ipc_rp_mbox_callback(uint16_t remoteCoreId, uint16_t clientId, uint32_t msgValue, void *args)
 {
@@ -69,6 +78,56 @@ void ipc_rp_mbox_callback(uint16_t remoteCoreId, uint16_t clientId, uint32_t msg
             gbShutdown = 1u;
             gbShutdownRemotecoreID = remoteCoreId;
         }
+        else if (msgValue == IPC_NOTIFY_RP_MBOX_SUSPEND_SYSTEM) /* Linux is entering a low power mode */
+        {
+            gbSuspendRemotecoreID = remoteCoreId;
+            SemaphoreP_post(&gLpmSuspendSem);
+        }
+        else if (msgValue == IPC_NOTIFY_RP_MBOX_ECHO_REQUEST) /* Linux resumed while this core stayed on */
+        {
+            IpcNotify_sendMsg(remoteCoreId, IPC_NOTIFY_CLIENT_ID_RP_MBOX,
+                              IPC_NOTIFY_RP_MBOX_ECHO_REPLY, 1u);
+        }
+    }
+}
+
+/*
+ * Linux waits for a reply to every suspend request. Without one it suspends
+ * anyway, but never shuts this core down or restarts it on resume.
+ */
+void lpm_suspend(void *args)
+{
+    int32_t status;
+    uint8_t nextHostState;
+    uint32_t reply;
+
+    while(1)
+    {
+        SemaphoreP_pend(&gLpmSuspendSem, SystemP_WAIT_FOREVER);
+
+        /* The DM knows whether the MCU domain stays powered in this low power mode */
+        status = Sciclient_lpmGetNextHostState(SystemP_WAIT_FOREVER, &nextHostState);
+        if (status != SystemP_SUCCESS)
+            nextHostState = TISCI_MSG_VALUE_HOST_STATE_INVALID;
+
+        switch (nextHostState)
+        {
+            case TISCI_MSG_VALUE_HOST_STATE_OFF:
+                /* Linux sends a shutdown request next and reloads the firmware on resume */
+                reply = IPC_NOTIFY_RP_MBOX_SUSPEND_ACK;
+                break;
+            case TISCI_MSG_VALUE_HOST_STATE_ON:
+                /* MCU only mode, keep running while Linux is suspended */
+                reply = IPC_NOTIFY_RP_MBOX_SUSPEND_AUTO;
+                break;
+            default:
+                reply = IPC_NOTIFY_RP_MBOX_SUSPEND_CANCEL;
+                break;
+        }
+
+        DebugP_log("Suspend request, next host state %d\r\n", nextHostState);
+
+        IpcNotify_sendMsg(gbSuspendRemotecoreID, IPC_NOTIFY_CLIENT_ID_RP_MBOX, reply, 1u);
     }
 }
 
@@ -77,6 +136,7 @@ void freertos_main(void *args)
     int32_t status;
     TaskP_Params taskParams;
     TaskP_Object gpioTask;
+    TaskP_Object lpmSuspendTask;
 
     Drivers_open();
     status = Board_driversOpen();
@@ -87,10 +147,24 @@ void freertos_main(void *args)
     DebugP_assert(status==SystemP_SUCCESS);
 #endif
 
+    status = SemaphoreP_constructBinary(&gLpmSuspendSem, 0);
+    DebugP_assert(status==SystemP_SUCCESS);
+
     status = IpcNotify_registerClient(IPC_NOTIFY_CLIENT_ID_RP_MBOX, &ipc_rp_mbox_callback, NULL);
     DebugP_assert(status==SystemP_SUCCESS);
 
     DebugP_log("PHYTEC Demo Firmware\r\n");
+
+    TaskP_Params_init(&taskParams);
+    taskParams.name = "lpm_suspend";
+    taskParams.stackSize = LPM_SUSPEND_STACK_SIZE;
+    taskParams.stack = lpm_suspend_xStack;
+    taskParams.priority = LPM_SUSPEND_TASK_PRI;
+    taskParams.args = NULL;
+    taskParams.taskMain = lpm_suspend;
+
+    status = TaskP_construct(&lpmSuspendTask, &taskParams);
+    DebugP_assert(status == SystemP_SUCCESS);
 
     TaskP_Params_init(&taskParams);
     taskParams.name = "gpio_led_blink";
