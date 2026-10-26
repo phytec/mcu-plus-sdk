@@ -51,6 +51,7 @@ BOOTIMAGE_CORE_ID_a53ss1-1 = 3
 BOOTIMAGE_CORE_ID_r5fss0-0 = 4
 BOOTIMAGE_CORE_ID_m4fss0-0 = 5
 BOOTIMAGE_CORE_ID_hsm-m4fss0-0 = 6
+BOOTIMAGE_CORE_ID_load_only = 21
 SBL_RUN_ADDRESS=0x43C00000
 SBL_DEV_ID=55
 
@@ -75,7 +76,7 @@ ifeq ($(CCS_IDE_MODE),cloud)
 #	No post build steps
 else
 	@echo  Boot image: am62x:m4fss0-0:freertos:ti-arm-clang $(BOOTIMAGE_NAME)  ...
-	$(OUTRPRC_CMD) $(OUTFILE) >> $(BOOTIMAGE_TEMP_OUT_FILE)
+	$(OUTRPRC_CMD) $(OUTFILE) $(SW_VERSION)>> $(BOOTIMAGE_TEMP_OUT_FILE)
 	$(COPY) $(OUTNAME).rprc $(BOOTIMAGE_RPRC_NAME)
 	$(COPY) $(BOOTIMAGE_RPRC_NAME) $(BOOTIMAGE_RPRC_NAME_TMP)
 	$(RM) $(BOOTIMAGE_RPRC_NAME)
@@ -97,7 +98,7 @@ endif
 endif
 	$(RM) $(BOOTIMAGE_RPRC_NAME_TMP)
 	$(RM) $(PROFILE)/demo.mcu-m4f0_0.strip.out
-	$(STRIP) -o=$(PROFILE)/demo.mcu-m4f0_0.strip.out $(OUTFILE)
+	$(STRIP) -p -o=$(PROFILE)/demo.mcu-m4f0_0.strip.out $(OUTFILE)
 	@echo  Boot image: am62x:m4fss0-0:freertos:ti-arm-clang $(BOOTIMAGE_NAME) Done !!!
 	@echo  .
 ifeq ($(DEVICE_TYPE),HS)

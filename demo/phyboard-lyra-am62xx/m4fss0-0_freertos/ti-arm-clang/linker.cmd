@@ -22,6 +22,9 @@ SECTIONS
     .vectors:{} palign(8) > M4F_VECS
     .text:   {} palign(8) > M4F_IRAM     /* This is where code resides */
 
+    /* This is allocated for IPC. It is placed before .bss so that
+     * __BSS_START/__BSS_END below still describe .bss in M4F_DRAM */
+    .bss.ipcctrl: {} palign(8) > M4F_DDR
     .bss:    {} palign(8) > M4F_DRAM     /* This is where uninitialized globals go */
     RUN_START(__BSS_START)
     RUN_END(__BSS_END)
@@ -49,6 +52,7 @@ MEMORY
     M4F_VECS : ORIGIN = 0x00000000 , LENGTH = 0x00000200
     M4F_IRAM : ORIGIN = 0x00000200 , LENGTH = 0x0002FE00
     M4F_DRAM : ORIGIN = 0x00030000 , LENGTH = 0x00010000
+    M4F_DDR  : ORIGIN = 0x9D9F0000 , LENGTH = 0x00010000
 
     /* when using multi-core application's i.e more than one R5F/M4F active, make sure
      * this memory does not overlap with R5F's
