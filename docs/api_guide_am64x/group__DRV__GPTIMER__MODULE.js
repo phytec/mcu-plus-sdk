@@ -1,0 +1,95 @@
+var group__DRV__GPTIMER__MODULE =
+[
+    [ "gp_timer/v0/gp_timer.h", "gp__timer_2v0_2gp__timer_8h.html", null ],
+    [ "GPTIMER_HwAttrs", "structGPTIMER__HwAttrs.html", [
+      [ "baseAddr", "structGPTIMER__HwAttrs.html#abc53ac2ad77e23985e965f4891344e9f", null ],
+      [ "intNum", "structGPTIMER__HwAttrs.html#a882c18e793ccc3f6a0d56f7dfc531e65", null ],
+      [ "eventId", "structGPTIMER__HwAttrs.html#a98bed9774b5188607b741d0971ffd505", null ],
+      [ "inputClk", "structGPTIMER__HwAttrs.html#affac8b4ba93c39ff4d27bc82d8a18d2d", null ],
+      [ "enableIntr", "structGPTIMER__HwAttrs.html#aef8da31396d5fb91651bacff8255936c", null ],
+      [ "intrPriority", "structGPTIMER__HwAttrs.html#ae95cd3c4a535ca5aaac74013947008e9", null ]
+    ] ],
+    [ "GPTIMER_Params", "structGPTIMER__Params.html", [
+      [ "enablePrescaler", "structGPTIMER__Params.html#ae0b8e4b38288e203bab809fe887872c1", null ],
+      [ "cntPrescaler", "structGPTIMER__Params.html#a50e9e6d4a35f74dc3e2272eba9b8bab8", null ],
+      [ "oneShotMode", "structGPTIMER__Params.html#a4a45d39480783c237923bae5596aefbc", null ],
+      [ "cntReloadVal", "structGPTIMER__Params.html#afb40c49bb16539803a0dad2c9e7bfc93", null ],
+      [ "overflowMaskCount", "structGPTIMER__Params.html#a134cb87628b4473e9e2d84ef4beaefe0", null ],
+      [ "counterInitVal", "structGPTIMER__Params.html#ad199fa67c507f24e805e83362e8f08d3", null ]
+    ] ],
+    [ "GPTIMER_Compare_Config", "structGPTIMER__Compare__Config.html", [
+      [ "cntCompareValComp", "structGPTIMER__Compare__Config.html#a34f571e7eb8fd59769b5ed2c04128c3e", null ]
+    ] ],
+    [ "GPTIMER_Capture_Config", "structGPTIMER__Capture__Config.html", [
+      [ "captureMode", "structGPTIMER__Capture__Config.html#a17274ce9cee584336b6d249ccc669593", null ],
+      [ "captureEventMode", "structGPTIMER__Capture__Config.html#ac10378f4c181dd5b7c5f2a9735b23a0e", null ]
+    ] ],
+    [ "GPTIMER_PWM_Config", "structGPTIMER__PWM__Config.html", [
+      [ "trigOutputPWMMode", "structGPTIMER__PWM__Config.html#af78b6af1aef9cc3108201be3a428d273", null ],
+      [ "defaultPWMOutSetting", "structGPTIMER__PWM__Config.html#ac873acd44c66813cfc4ef5e1cbf2b1a4", null ],
+      [ "cntCompareValPWM", "structGPTIMER__PWM__Config.html#a43c151732ebf440d69def4b1182a5b93", null ],
+      [ "outputModulationType", "structGPTIMER__PWM__Config.html#ab3ba219bcb762bedc71256e1b29b8a61", null ]
+    ] ],
+    [ "GPTIMER_Object", "structGPTIMER__Object.html", [
+      [ "mutex", "structGPTIMER__Object.html#a11267fcd4a8a3f8600791667813acb36", null ],
+      [ "hwiObj", "structGPTIMER__Object.html#ac2e8700f6086f1b2efaba30872b698d5", null ],
+      [ "isOpen", "structGPTIMER__Object.html#a2cd6fe152a88698b5f4b6cb60ed6d5d5", null ],
+      [ "gptimerParams", "structGPTIMER__Object.html#a285c57a6d3e467d3cfc851d0b78c4b00", null ],
+      [ "timerConfigMode", "structGPTIMER__Object.html#acced786283b67b939dfd54e52679f1cd", null ],
+      [ "compareConfig", "structGPTIMER__Object.html#a77841d177ccbeca8dadf1a4900281791", null ],
+      [ "captureConfig", "structGPTIMER__Object.html#a74e1c09979c243d5c57339c65b9cfdbc", null ],
+      [ "pwmConfig", "structGPTIMER__Object.html#ac86a79b93bfcfcb3ef9acfd5292a8893", null ],
+      [ "overflowCallbackFunction", "structGPTIMER__Object.html#aabed449880b917bfe43f7500bb17eea2", null ],
+      [ "compareMatchCallbackFunction", "structGPTIMER__Object.html#ad02f04b2bfa5f8619aa23c3cd0b039da", null ],
+      [ "captureCallbackFunction", "structGPTIMER__Object.html#a074355b2ffecbd4eff7a5da3d298dedf", null ]
+    ] ],
+    [ "GPTIMER_Config", "structGPTIMER__Config.html", [
+      [ "object", "structGPTIMER__Config.html#a7a3810d3334e2c76c3eabf5602ca48dc", null ],
+      [ "hwAttrs", "structGPTIMER__Config.html#a39fff051d377654aec659a3d34bcf3e9", null ]
+    ] ],
+    [ "GPTIMER_MODE_CONFIG_FREE_RUN", "group__DRV__GPTIMER__MODULE.html#gad4f6ea6606cda137b25c322dbee9285d", null ],
+    [ "GPTIMER_MODE_CONFIG_INPUT_CAPTURE", "group__DRV__GPTIMER__MODULE.html#gaba066d0ffa56c28b274a81e096e1366a", null ],
+    [ "GPTIMER_MODE_CONFIG_OUTPUT_COMPARE", "group__DRV__GPTIMER__MODULE.html#ga0bfbf5dee083c3b860f1ed527b614f3b", null ],
+    [ "GPTIMER_MODE_CONFIG_PWM_GEN", "group__DRV__GPTIMER__MODULE.html#ga8a3b8b743686dace25f8963742f91230", null ],
+    [ "GPTIMER_INPUT_CAPTURE_MODE_SINGLE", "group__DRV__GPTIMER__MODULE.html#gaa6b2e96c0fe7555175a7d950388c8704", null ],
+    [ "GPTIMER_INPUT_CAPTURE_MODE_SECOND", "group__DRV__GPTIMER__MODULE.html#gac9169c23dc07b4683d1912a6069d903b", null ],
+    [ "GPTIMER_INPUT_CAPTURE_EVENT_NO_CAPTURE", "group__DRV__GPTIMER__MODULE.html#ga2bf2b1ffc9738a880d447f8304277dd8", null ],
+    [ "GPTIMER_INPUT_CAPTURE_EVENT_RISING", "group__DRV__GPTIMER__MODULE.html#ga09e1ea181a855c3d6b004ca9d8364e3c", null ],
+    [ "GPTIMER_INPUT_CAPTURE_EVENT_FALLING", "group__DRV__GPTIMER__MODULE.html#gabf5a2a1adededfc6a49988fe9fa2be97", null ],
+    [ "GPTIMER_INPUT_CAPTURE_EVENT_EDGE", "group__DRV__GPTIMER__MODULE.html#gaf48d3c655cefea4952d4c1940f270916", null ],
+    [ "GPTIMER_PWM_OUT_NO_TRIGGER", "group__DRV__GPTIMER__MODULE.html#gabeaa03a9ad0c28789759efbaa190c0fc", null ],
+    [ "GPTIMER_PWM_OUT_OVERFLOW_TRIGGER", "group__DRV__GPTIMER__MODULE.html#ga462b81ed38983a5240de104dd35693c2", null ],
+    [ "GPTIMER_PWM_OUT_OVERFLOW_MATCH_TRIGGER", "group__DRV__GPTIMER__MODULE.html#gab03f5d7697ca9116081458af2382a2f5", null ],
+    [ "GPTIMER_PWM_OUT_PIN_DEFAULT_0", "group__DRV__GPTIMER__MODULE.html#gaf4e7c539f8514186c0cdfaac1a47defa", null ],
+    [ "GPTIMER_PWM_OUT_PIN_DEFAULT_1", "group__DRV__GPTIMER__MODULE.html#ga4258e15c8fdb7b65e6675e0483f78076", null ],
+    [ "GPTIMER_PWM_OUT_PIN_MODULATION_PULSE", "group__DRV__GPTIMER__MODULE.html#ga6a401f6d31f0c171e4c721e4478e0d05", null ],
+    [ "GPTIMER_PWM_OUT_PIN_MODULATION_TOGGLE", "group__DRV__GPTIMER__MODULE.html#ga9083f0d2149426c2f2fae29d6f2f086f", null ],
+    [ "TIMER_IRQ_TCAR_IT_FLAG_MASK", "group__DRV__GPTIMER__MODULE.html#ga875f6eef084e467a744c770202328465", null ],
+    [ "TIMER_IRQ_OVF_IT_FLAG_MASK", "group__DRV__GPTIMER__MODULE.html#ga9fb9117b4d03d6273609f6d1261c6238", null ],
+    [ "TIMER_IRQ_MAT_IT_FLAG_MASK", "group__DRV__GPTIMER__MODULE.html#gada8adc10716dc808dc132887f1cc3722", null ],
+    [ "GPTIMER_Handle", "group__DRV__GPTIMER__MODULE.html#gaec98d33af39c4b45227abfb4c40ba844", null ],
+    [ "GPTIMER_OverflowCallbackFxn", "group__DRV__GPTIMER__MODULE.html#ga695ca01320f913b9647b779227822844", null ],
+    [ "GPTIMER_CompareMatchCallbackFxn", "group__DRV__GPTIMER__MODULE.html#ga463490423e59b70e27419780badaf417", null ],
+    [ "GPTIMER_CaptureCallbackFxn", "group__DRV__GPTIMER__MODULE.html#ga1ecc91b2c93bf5f5d59db2cbb9fe752b", null ],
+    [ "GPTIMER_init", "group__DRV__GPTIMER__MODULE.html#ga8070d81ef895ab0f7e3187a22961acd9", null ],
+    [ "GPTIMER_deinit", "group__DRV__GPTIMER__MODULE.html#ga0572de6ab5052529bbff147dad4a38bb", null ],
+    [ "GPTIMER_Params_init", "group__DRV__GPTIMER__MODULE.html#ga014783b5cc40ccb35857fde83a306980", null ],
+    [ "GPTIMER_open", "group__DRV__GPTIMER__MODULE.html#ga3e23ac9ac82ce1b81853dda90a22f73c", null ],
+    [ "GPTIMER_close", "group__DRV__GPTIMER__MODULE.html#ga43d96eaca1073dd4730b90836ef4a40b", null ],
+    [ "GPTIMER_start", "group__DRV__GPTIMER__MODULE.html#gaa989eb834e53c46fda532cb8f42243c6", null ],
+    [ "GPTIMER_stop", "group__DRV__GPTIMER__MODULE.html#ga138473ab87617884a87d100b1081c165", null ],
+    [ "GPTIMER_getCount", "group__DRV__GPTIMER__MODULE.html#ga3a4718c8e37ccdca76cc9ca753f857b3", null ],
+    [ "GPTIMER_setCount", "group__DRV__GPTIMER__MODULE.html#ga29ed0d4ad7ea926007840a4bd67cc9e7", null ],
+    [ "GPTIMER_setCompareVal", "group__DRV__GPTIMER__MODULE.html#ga25a97af7dcf410946b49fdbf60879455", null ],
+    [ "GPTIMER_getTimerCaptureVal1", "group__DRV__GPTIMER__MODULE.html#ga72b355a50277ba778eaff7e6f38ab1f2", null ],
+    [ "GPTIMER_getTimerCaptureVal2", "group__DRV__GPTIMER__MODULE.html#ga8624df3f75f8bb46beba981b72fee102", null ],
+    [ "GPTIMER_setFreeRunMode", "group__DRV__GPTIMER__MODULE.html#ga81ffc189c410795f80ae358d101feb41", null ],
+    [ "GPTIMER_setIpCaptureMode", "group__DRV__GPTIMER__MODULE.html#ga4dd48593189dccdd5efc3dda52672fbe", null ],
+    [ "GPTIMER_setOpCompareMode", "group__DRV__GPTIMER__MODULE.html#ga9756416afa765effa5d2dde12bf5e745", null ],
+    [ "GPTIMER_setPWMGenMode", "group__DRV__GPTIMER__MODULE.html#ga9c173e197d904707bfae470160b41fed", null ],
+    [ "GPTIMER_setCallbackFxn", "group__DRV__GPTIMER__MODULE.html#ga74c1fe122b87c0b8ad1c1ffe555f7ae1", null ],
+    [ "GPTIMER_getIRQStatus", "group__DRV__GPTIMER__MODULE.html#gacacdc2abb1420f2d3e244a692147c960", null ],
+    [ "GPTIMER_clearIRQStatus", "group__DRV__GPTIMER__MODULE.html#ga4ce6cb29c5f24883bc0fe52a7e455b10", null ],
+    [ "GPTIMER_enableInterruptStatus", "group__DRV__GPTIMER__MODULE.html#gad5adba3d87ba71c8a4500dc110daaf75", null ],
+    [ "GPTIMER_disableInterruptStatus", "group__DRV__GPTIMER__MODULE.html#ga7a10d60106c22632860a16d05e990958", null ]
+];

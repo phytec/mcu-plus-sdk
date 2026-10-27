@@ -1,0 +1,270 @@
+/********************************************************************
+ * Copyright (C) 2022-2024 Texas Instruments Incorporated.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *    Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *    Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  Name        : cslr_pcie_g4x2.h
+*/
+#ifndef CSLR_PCIE_G4X2_H_
+#define CSLR_PCIE_G4X2_H_
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+#include <drivers/hw_include/cslr.h>
+#include <stdint.h>
+
+/**************************************************************************
+* Module Base Offset Values
+**************************************************************************/
+
+#define CSL_PCIE_G4X2_CPTS_REGS_BASE                                           (0x00000000U)
+#define CSL_PCIE_G4X2_ECC_AGGR_REGS_BASE                                       (0x00000000U)
+#define CSL_PCIE_G4X2_INTD_CFG_REGS_BASE                                       (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_CORE_REGS_BASE                                      (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_HP_DAT0_REGS_BASE                                   (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_HP_DAT1_REGS_BASE                                   (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_HP_DAT2_REGS_BASE                                   (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_LP_DAT0_REGS_BASE                                   (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_LP_DAT1_REGS_BASE                                   (0x00000000U)
+#define CSL_PCIE_G4X2_PCIE_LP_DAT2_REGS_BASE                                   (0x00000000U)
+#define CSL_PCIE_G4X2_USER_CFG_REGS_BASE                                       (0x00000000U)
+#define CSL_PCIE_G4X2_VMAP_REGS_BASE                                           (0x00000000U)
+
+
+/**************************************************************************
+* Hardware Region  :
+**************************************************************************/
+
+
+/**************************************************************************
+* Register Overlay Structure
+**************************************************************************/
+
+typedef struct {
+    volatile uint32_t REVISION;
+    volatile uint8_t  Resv_256[252];
+    volatile uint32_t ENABLE_REG_SYS_0;
+    volatile uint32_t ENABLE_REG_SYS_1;
+    volatile uint32_t ENABLE_REG_SYS_2;
+    volatile uint8_t  Resv_768[500];
+    volatile uint32_t ENABLE_CLR_REG_SYS_0;
+    volatile uint32_t ENABLE_CLR_REG_SYS_1;
+    volatile uint32_t ENABLE_CLR_REG_SYS_2;
+    volatile uint8_t  Resv_1280[500];
+    volatile uint32_t STATUS_REG_SYS_0;
+    volatile uint32_t STATUS_REG_SYS_1;
+    volatile uint32_t STATUS_REG_SYS_2;
+    volatile uint8_t  Resv_1792[508];
+    volatile uint32_t STATUS_CLR_REG_SYS_2;
+    volatile uint8_t  Resv_2688[884];
+    volatile uint32_t INTR_VECTOR_REG_SYS;
+} CSL_intd_cfgRegs;
+
+
+/**************************************************************************
+* Register Macros
+**************************************************************************/
+
+#define CSL_INTD_CFG_REVISION                                                  (0x00000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_0                                          (0x00000100U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1                                          (0x00000104U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2                                          (0x00000108U)
+#define CSL_INTD_CFG_ENABLE_CLR_REG_SYS_0                                      (0x00000300U)
+#define CSL_INTD_CFG_ENABLE_CLR_REG_SYS_1                                      (0x00000304U)
+#define CSL_INTD_CFG_ENABLE_CLR_REG_SYS_2                                      (0x00000308U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_0                                          (0x00000500U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1                                          (0x00000504U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2                                          (0x00000508U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2                                      (0x00000708U)
+#define CSL_INTD_CFG_INTR_VECTOR_REG_SYS                                       (0x00000A80U)
+
+/**************************************************************************
+* Field Definition Macros
+**************************************************************************/
+
+/* ENABLE_REG_SYS_0 */
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_0_ENABLE_SYS_EN_PCIE_DOWNSTREAM_MASK       (0x00000001U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_0_ENABLE_SYS_EN_PCIE_DOWNSTREAM_SHIFT      (0x00000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_0_ENABLE_SYS_EN_PCIE_DOWNSTREAM_MAX        (0x00000001U)
+
+/* ENABLE_REG_SYS_1 */
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_PWR_STATE_MASK        (0x04000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_PWR_STATE_SHIFT       (0x0000001AU)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_PWR_STATE_MAX         (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_3_MASK         (0x02000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_3_SHIFT        (0x00000019U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_3_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_2_MASK         (0x01000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_2_SHIFT        (0x00000018U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_2_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_1_MASK         (0x00800000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_1_SHIFT        (0x00000017U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_1_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_0_MASK         (0x00400000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_0_SHIFT        (0x00000016U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_LEGACY_0_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_FLR_MASK              (0x00000001U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_FLR_SHIFT             (0x00000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_1_ENABLE_SYS_EN_PCIE_FLR_MAX               (0x00000001U)
+
+/* ENABLE_REG_SYS_2 */
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_DPA_MASK              (0x00000001U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_DPA_SHIFT             (0x00000000U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_DPA_MAX               (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_0_MASK          (0x00000040U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_0_SHIFT         (0x00000006U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_0_MAX           (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_1_MASK          (0x00000080U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_1_SHIFT         (0x00000007U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_1_MAX           (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_2_MASK          (0x00000100U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_2_SHIFT         (0x00000008U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_ERROR_2_MAX           (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_HOT_RESET_MASK        (0x00000200U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_HOT_RESET_SHIFT       (0x00000009U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_HOT_RESET_MAX         (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_Link_STATE_MASK       (0x00000400U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_Link_STATE_SHIFT      (0x0000000AU)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_Link_STATE_MAX        (0x00000001U)
+
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_PTM_MASK              (0x00000800U)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_PTM_SHIFT             (0x0000000BU)
+#define CSL_INTD_CFG_ENABLE_REG_SYS_2_ENABLE_SYS_EN_PCIE_PTM_MAX               (0x00000001U)
+
+/* STATUS_REG_SYS_0 */
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_0_STATUS_SYS_PCIE_DOWNSTREAM_MASK          (0x00000001U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_0_STATUS_SYS_PCIE_DOWNSTREAM_SHIFT         (0x00000000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_0_STATUS_SYS_PCIE_DOWNSTREAM_MAX           (0x00000001U)
+
+/* STATUS_REG_SYS_1 */
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_PWR_STATE_MASK           (0x04000000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_PWR_STATE_SHIFT          (0x0000001AU)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_PWR_STATE_MAX            (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_3_MASK            (0x02000000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_3_SHIFT           (0x00000019U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_3_MAX             (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_2_MASK            (0x01000000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_2_SHIFT           (0x00000018U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_2_MAX             (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_1_MASK            (0x00800000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_1_SHIFT           (0x00000017U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_1_MAX             (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_0_MASK            (0x00400000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_0_SHIFT           (0x00000016U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_LEGACY_0_MAX             (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_FLR_MASK                 (0x00000001U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_FLR_SHIFT                (0x00000000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_1_STATUS_SYS_PCIE_FLR_MAX                  (0x00000001U)
+
+/* STATUS_REG_SYS_2 */
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_PTM_MASK                 (0x00000800U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_PTM_SHIFT                (0x0000000BU)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_PTM_MAX                  (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_LINK_STATE_MASK          (0x00000400U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_LINK_STATE_SHIFT         (0x0000000AU)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_LINK_STATE_MAX           (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_HOT_RESET_MASK           (0x00000200U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_HOT_RESET_SHIFT          (0x00000009U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_HOT_RESET_MAX            (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_2_MASK             (0x00000100U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_2_SHIFT            (0x00000008U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_2_MAX              (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_1_MASK             (0x00000080U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_1_SHIFT            (0x00000007U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_1_MAX              (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_0_MASK             (0x00000040U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_0_SHIFT            (0x00000006U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_ERROR_0_MAX              (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_DPA_MASK                 (0x00000001U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_DPA_SHIFT                (0x00000000U)
+#define CSL_INTD_CFG_STATUS_REG_SYS_2_STATUS_SYS_PCIE_DPA_MAX                  (0x00000001U)
+
+/* STATUS_CLR_REG_SYS_2 */
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_PTM_MASK             (0x00000800U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_PTM_SHIFT            (0x0000000BU)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_PTM_MAX              (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_LINK_STATE_MASK      (0x00000400U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_LINK_STATE_SHIFT     (0x0000000AU)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_LINK_STATE_MAX       (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_HOT_RESET_MASK       (0x00000200U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_HOT_RESET_SHIFT      (0x00000009U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_HOT_RESET_MAX        (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_2_MASK         (0x00000100U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_2_SHIFT        (0x00000008U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_2_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_1_MASK         (0x00000080U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_1_SHIFT        (0x00000007U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_1_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_0_MASK         (0x00000040U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_0_SHIFT        (0x00000006U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_ERROR_0_MAX          (0x00000001U)
+
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_DPA_MASK             (0x00000001U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_DPA_SHIFT            (0x00000000U)
+#define CSL_INTD_CFG_STATUS_CLR_REG_SYS_2_STATUS_SYS_PCIE_DPA_MAX              (0x00000001U)
+
+#ifdef __cplusplus
+}
+#endif
+#endif

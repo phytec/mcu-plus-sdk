@@ -1,0 +1,31 @@
+{
+    "ramSize": 16777216,
+    "manufacturer": "APMEM",
+    "type": "PSRAM",
+    "interfaceType": "serial",
+    "deviceId": "0x02",
+    "manufacturerId": "0x0D",
+    "cmdRd": "0x20",
+    "cmdWr": "0xA0",
+    "cmdReset": "0xFF",
+    "cmdRegRd": "0x40",
+    "cmdRegWr": "0xC0",
+    "dummyClksRd": 7,
+    "dummyClksWr": 3,
+    "dummyClksCmd": 5,
+    "pageSize": 1024,
+    "mrConfig": [
+        {
+            "address": "0x00000000",
+            "value": "0x29"
+        },
+        {
+            "address": "0x00000004",
+            "value": "0x40"
+        },
+        {
+            "address": "0x00000008",
+            "value": "0x03"
+        }
+    ]
+}
