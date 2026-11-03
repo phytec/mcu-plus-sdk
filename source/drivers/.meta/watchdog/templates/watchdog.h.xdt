@@ -1,0 +1,35 @@
+%%{
+    let module = system.modules['/drivers/watchdog/watchdog'];
+%%}
+
+%%{
+    let common = system.getScript("/common");
+%%}
+
+%%{
+    let soc = common.getSocName();
+%%}
+
+
+
+/*
+ * WATCHDOG
+ */
+#include <drivers/watchdog.h>
+
+/* Watchdog Instance Macros */
+% for(let i = 0; i < module.$instances.length; i++) {
+    % let instance = module.$instances[i];
+    % let config = module.getInstanceConfig(instance);
+#define `instance.$name.toUpperCase()` (`i`U)
+#define `instance.$name.toUpperCase()`_INTR (`config.intrNum`U)
+%if(config.eventId != undefined) {
+#define `instance.$name.toUpperCase()`_EVENT_ID (`config.eventId`U)
+% }
+% else {
+#define `instance.$name.toUpperCase()`_EVENT_ID HWIP_INVALID_EVENT_ID
+% }
+#define WATCHDOG_INSTANCE (`config.wdtInstance`)
+% }
+#define CONFIG_WATCHDOG_NUM_INSTANCES (`module.$instances.length`U)
+
