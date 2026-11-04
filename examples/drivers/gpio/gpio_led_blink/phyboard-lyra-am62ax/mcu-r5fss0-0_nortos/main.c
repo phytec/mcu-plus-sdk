@@ -31,12 +31,25 @@
  */
 
 #include <stdlib.h>
+#include <drivers/ipc_notify.h>
 #include "ti_drivers_config.h"
 #include "ti_board_config.h"
 #include "ti_drivers_open_close.h"
 #include "ti_board_open_close.h"
 
 void gpio_led_blink_main(void *args);
+
+volatile uint8_t gbShutdown = 0u;
+volatile uint16_t gbShutdownRemotecoreID = 0u;
+
+static void ipc_rp_mbox_callback(uint16_t remoteCoreId, uint16_t clientId, uint32_t msgValue, void *args)
+{
+    if ((clientId == IPC_NOTIFY_CLIENT_ID_RP_MBOX) && (msgValue == IPC_NOTIFY_RP_MBOX_SHUTDOWN))
+    {
+        gbShutdownRemotecoreID = remoteCoreId;
+        gbShutdown = 1u;
+    }
+}
 
 int main()
 {
@@ -51,7 +64,12 @@ int main()
     status = Board_driversOpen();
     DebugP_assert(status==SystemP_SUCCESS);
 
-    gpio_led_blink_main(NULL);
+    /* Linux sends SHUTDOWN on remoteproc stop and waits for the ACK */
+    status = IpcNotify_registerClient(IPC_NOTIFY_CLIENT_ID_RP_MBOX, ipc_rp_mbox_callback, NULL);
+    DebugP_assert(status==SystemP_SUCCESS);
+
+    /* Blink until a shutdown is requested */
+    gpio_led_blink_main((void *) &gbShutdown);
 
     /* Close board and flash drivers */
     Board_driversClose();
@@ -59,7 +77,15 @@ int main()
     Drivers_close();
 
     Board_deinit();
+    /* Also stops the tick timer and disables interrupts */
     System_deinit();
 
-    return 0;
+    IpcNotify_sendMsg(gbShutdownRemotecoreID, IPC_NOTIFY_CLIENT_ID_RP_MBOX,
+                      IPC_NOTIFY_RP_MBOX_SHUTDOWN_ACK, 1u);
+
+    /* Linux halts the core once it is in WFI */
+    while(1)
+    {
+        __asm__ __volatile__ ("wfi"   "\n\t": : : "memory");
+    }
 }

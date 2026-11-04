@@ -41,10 +41,12 @@
 /*
  * This example configures a GPIO pin connected to an LED on the EVM in
  * output mode.
+ * args may point to a stop flag, otherwise the LED blinks forever.
  */
 
 void gpio_led_blink_main(void *args)
 {
+    volatile uint8_t *stop = (volatile uint8_t *) args;
     uint32_t    gpioBaseAddr, pinNum;
 
     DebugP_log("GPIO LED Blink Test Started ...\r\n");
@@ -54,7 +56,7 @@ void gpio_led_blink_main(void *args)
     pinNum       = GPIO_LED_PIN;
 
     GPIO_setDirMode(gpioBaseAddr, pinNum, GPIO_LED_DIR);
-    while(1)
+    while((stop == NULL) || (*stop == 0u))
     {
         GPIO_pinWriteHigh(gpioBaseAddr, pinNum);
         ClockP_usleep(150000);
