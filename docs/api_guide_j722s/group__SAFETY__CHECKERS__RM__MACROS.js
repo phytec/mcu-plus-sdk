@@ -1,0 +1,4 @@
+var group__SAFETY__CHECKERS__RM__MACROS =
+[
+    [ "SAFETY_CHECKERS_RM_MAX_REG_PER_GROUP", "group__SAFETY__CHECKERS__RM__MACROS.html#ga7cf2afc583de44a8f29c1e1a6dc7a9a5", null ]
+];

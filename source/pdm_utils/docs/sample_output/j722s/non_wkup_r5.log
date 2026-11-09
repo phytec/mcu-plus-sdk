@@ -1,0 +1,137 @@
+
+
+----------------PLL INFO STARTS-----------------
+========================================================================================================================
+|  PLL Name   | status  |         config        |     postdiv    | VCO       | Num of |  HSDIV  |  status  | Output    |
+|             |         |                       |                | Freq(MHz) | HSDIVs |         |          | freq(MHz) |
+========================================================================================================================
+|MAIN_PLL_0   |ENABLED  |M=80, FracM=0          |ENABLED, M2=2   |2000       |10      | HSDIV 0 |ENABLED   |500        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 2 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 3 |ENABLED   |133        |
+|             |         |                       |                |           |        | HSDIV 4 |ENABLED   |80         |
+|             |         |                       |                |           |        | HSDIV 5 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 6 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 7 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 8 |ENABLED   |50         |
+|             |         |                       |                |           |        | HSDIV 9 |ENABLED   |100        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_1   |ENABLED  |M=76, FracM=13421773   |ENABLED, M2=2   |1920       |7       | HSDIV 0 |ENABLED   |192        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |160        |
+|             |         |                       |                |           |        | HSDIV 2 |ENABLED   |192        |
+|             |         |                       |                |           |        | HSDIV 3 |ENABLED   |192        |
+|             |         |                       |                |           |        | HSDIV 4 |ENABLED   |320        |
+|             |         |                       |                |           |        | HSDIV 5 |ENABLED   |160        |
+|             |         |                       |                |           |        | HSDIV 6 |ENABLED   |96         |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_2   |ENABLED  |M=80, FracM=0          |ENABLED, M2=2   |2000       |10      | HSDIV 0 |ENABLED   |100        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |250        |
+|             |         |                       |                |           |        | HSDIV 2 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 3 |ENABLED   |333        |
+|             |         |                       |                |           |        | HSDIV 4 |ENABLED   |500        |
+|             |         |                       |                |           |        | HSDIV 5 |ENABLED   |500        |
+|             |         |                       |                |           |        | HSDIV 6 |ENABLED   |250        |
+|             |         |                       |                |           |        | HSDIV 7 |ENABLED   |100        |
+|             |         |                       |                |           |        | HSDIV 8 |ENABLED   |100        |
+|             |         |                       |                |           |        | HSDIV 9 |ENABLED   |50         |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_5   |ENABLED  |M=120, FracM=0         |ENABLED, M2=2   |3000       |3       | HSDIV 0 |ENABLED   |600        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |300        |
+|             |         |                       |                |           |        | HSDIV 2 |ENABLED   |428        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_6   |ENABLED  |M=86, FracM=6710887    |ENABLED, M2=2   |2160       |1       | HSDIV 0 |ENABLED   |720        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_7   |ENABLED  |M=73, FracM=0          |ENABLED, M2=2   |1824       |2       | HSDIV 0 |ENABLED   |912        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |912        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_8   |ENABLED  |M=100, FracM=0         |ENABLED, M2=2   |2500       |1       | HSDIV 0 |ENABLED   |1250       |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_12  |ENABLED  |M=74, FracM=11072963   |ENABLED, M2=1   |1866       |1       | HSDIV 0 |ENABLED   |933        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_15  |ENABLED  |M=96, FracM=0          |ENABLED, M2=1   |2400       |4       | HSDIV 0 |ENABLED   |400        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |400        |
+|             |         |                       |                |           |        | HSDIV 2 |ENABLED   |800        |
+|             |         |                       |                |           |        | HSDIV 3 |ENABLED   |800        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_16  |ENABLED  |M=84, FracM=0          |ENABLED, M2=2   |2100       |1       | HSDIV 0 |ENABLED   |2100       |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_17  |ENABLED  |M=72, FracM=0          |ENABLED, M2=2   |1800       |1       | HSDIV 0 |ENABLED   |300        |
+------------------------------------------------------------------------------------------------------------------------
+|MAIN_PLL_18  |ENABLED  |M=84, FracM=0          |ENABLED, M2=2   |2100       |1       | HSDIV 0 |ENABLED   |700        |
+------------------------------------------------------------------------------------------------------------------------
+|MCU_PLL_0    |ENABLED  |M=96, FracM=0          |ENABLED, M2=2   |2400       |7       | HSDIV 0 |ENABLED   |400        |
+|             |         |                       |                |           |        | HSDIV 1 |ENABLED   |96         |
+|             |         |                       |                |           |        | HSDIV 2 |ENABLED   |48         |
+|             |         |                       |                |           |        | HSDIV 3 |ENABLED   |800        |
+|             |         |                       |                |           |        | HSDIV 4 |ENABLED   |20         |
+|             |         |                       |                |           |        | HSDIV 5 |ENABLED   |200        |
+|             |         |                       |                |           |        | HSDIV 6 |ENABLED   |400        |
+------------------------------------------------------------------------------------------------------------------------
+
+
+----------------PLL INFO ENDS-----------------
+
+
+==============PET CLOCK TABLE START=============
+========================================
+|       Frequency of selected IPs      |
+========================================
+|       IP Name           |  Freq(MHz) |
+========================================
+|               MAIN SMS 0|         400|
+|             WKUP R5FSS 0|         800|
+|              MCU R5FSS 0|         800|
+|             MAIN R5FSS 0|         800|
+|             MAIN A53SS 0|        1250|
+|             MAIN C71SS 0|         912|
+|             MAIN C71SS 1|         912|
+|                   VPAC 0|         600|
+|                  DMPAC 0|         428|
+|               MAIN GPU 0|           0|
+|  Video Encoder/Decoder 0|         500|
+|      MAIN JPEG Encoder 0|         250|
+|            LPDDR4 EMIF 0|         933|
+|           MCU Domain CLK|         500|
+|Device Manager Domain CLK|         400|
+|          Main Domain CLK|         500|
+|           HSM Domain CLK|         400|
+|           CSI TX ESC CLK|          16|
+|          CSI TX MAIN CLK|         500|
+========================================
+==============PET CLOCK TABLE END===============
+
+
+----------------PSC INFO STARTS-----------------
+==============================================
+|          Device Name        |     status   |
+==============================================
+|         PD_GP_CORE_CTL_MCU  |     ENABLED  |
+|          LPSC_MCU_ALWAYSON  |     ENABLED  |
+|          LPSC_MAIN2MCU_ISO  |     ENABLED  |
+|            LPSC_DM2MCU_ISO  |     ENABLED  |
+|           LPSC_DM2SAFE_ISO  |     ENABLED  |
+|            LPSC_MCU2DM_ISO  |     ENABLED  |
+|              LPSC_MCU_TEST  |    DISABLED  |
+|                LPSC_MCU_R5  |    DISABLED  |
+|          LPSC_MCU_MCANSS_0  |    DISABLED  |
+|          LPSC_MCU_MCANSS_1  |    DISABLED  |
+|            LPSC_MCU_COMMON  |     ENABLED  |
+|             LPSC_MCU_PBIST  |     ENABLED  |
+|                   PD_MCUSS  |     ENABLED  |
+|                 PD_GP_CORE  |     ENABLED  |
+|         LPSC_MAIN_ALWAYSON  |     ENABLED  |
+|               LPSC_MAIN_DM  |     ENABLED  |
+|        LPSC_MAIN_DM_PBIST0  |     ENABLED  |
+|      LPSC_MAIN_MAIN2DM_ISO  |     ENABLED  |
+|      LPSC_MAIN_DM2MAIN_ISO  |     ENABLED  |
+|LPSC_MAIN_DM2MAIN_INFRA_ISO  |     ENABLED  |
+|   LPSC_MAIN_DM2CENTRAL_ISO  |     ENABLED  |
+|   LPSC_MAIN_CENTRAL2DM_ISO  |     ENABLED  |
+|        LPSC_MAIN_DM_PBIST1  |     ENABLED  |
+|          LPSC_MAIN_CSI_RX1  |    DISABLED  |
+|         LPSC_MAIN_DPHY_RX1  |    DISABLED  |
+|                PD_GPU_CORE  |    DISABLED  |
+==============================================
+
+
+----------------PSC INFO ENDS-----------------
