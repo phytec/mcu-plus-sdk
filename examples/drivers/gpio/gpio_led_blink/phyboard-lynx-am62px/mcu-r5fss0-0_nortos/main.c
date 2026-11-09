@@ -32,6 +32,7 @@
 
 #include <stdlib.h>
 #include <drivers/ipc_notify.h>
+#include <drivers/sciclient.h>
 #include "ti_drivers_config.h"
 #include "ti_board_config.h"
 #include "ti_drivers_open_close.h"
@@ -39,16 +40,75 @@
 
 void gpio_led_blink_main(void *args);
 
+/* Makes the blink loop return so main can handle a request */
+volatile uint8_t gbWake = 0u;
 volatile uint8_t gbShutdown = 0u;
 volatile uint16_t gbShutdownRemotecoreID = 0u;
+volatile uint8_t gbSuspend = 0u;
+volatile uint16_t gbSuspendRemotecoreID = 0u;
 
 static void ipc_rp_mbox_callback(uint16_t remoteCoreId, uint16_t clientId, uint32_t msgValue, void *args)
 {
-    if ((clientId == IPC_NOTIFY_CLIENT_ID_RP_MBOX) && (msgValue == IPC_NOTIFY_RP_MBOX_SHUTDOWN))
+    if (clientId != IPC_NOTIFY_CLIENT_ID_RP_MBOX)
+    {
+        return;
+    }
+
+    if (msgValue == IPC_NOTIFY_RP_MBOX_SHUTDOWN)
     {
         gbShutdownRemotecoreID = remoteCoreId;
         gbShutdown = 1u;
+        gbWake = 1u;
     }
+    else if (msgValue == IPC_NOTIFY_RP_MBOX_SUSPEND_SYSTEM)
+    {
+        /* The reply needs Sciclient, which can't be used from this ISR */
+        gbSuspendRemotecoreID = remoteCoreId;
+        gbSuspend = 1u;
+        gbWake = 1u;
+    }
+    else if (msgValue == IPC_NOTIFY_RP_MBOX_ECHO_REQUEST)
+    {
+        /* Linux resumed while this core stayed on */
+        IpcNotify_sendMsg(remoteCoreId, IPC_NOTIFY_CLIENT_ID_RP_MBOX,
+                          IPC_NOTIFY_RP_MBOX_ECHO_REPLY, 1u);
+    }
+}
+
+/*
+ * Linux waits for a reply to every suspend request. Without one it keeps
+ * this core powered and never shuts it down or restarts it on resume.
+ */
+static void lpm_suspend_reply(void)
+{
+    uint8_t nextHostState;
+    uint32_t reply;
+
+    /* The DM knows whether the MCU domain stays powered in this low power mode */
+    if (Sciclient_lpmGetNextHostState(SystemP_WAIT_FOREVER, &nextHostState) != SystemP_SUCCESS)
+    {
+        nextHostState = TISCI_MSG_VALUE_HOST_STATE_INVALID;
+    }
+
+    switch (nextHostState)
+    {
+        case TISCI_MSG_VALUE_HOST_STATE_OFF:
+            /* Linux sends a shutdown request next and reloads the firmware on resume */
+            reply = IPC_NOTIFY_RP_MBOX_SUSPEND_ACK;
+            break;
+        case TISCI_MSG_VALUE_HOST_STATE_ON:
+            /* MCU only mode, keep running while Linux is suspended */
+            reply = IPC_NOTIFY_RP_MBOX_SUSPEND_AUTO;
+            break;
+        default:
+            reply = IPC_NOTIFY_RP_MBOX_SUSPEND_CANCEL;
+            break;
+    }
+
+    /* Log before replying, IO isolation may be enabled right after */
+    DebugP_log("Suspend request, next host state %d\r\n", nextHostState);
+
+    IpcNotify_sendMsg(gbSuspendRemotecoreID, IPC_NOTIFY_CLIENT_ID_RP_MBOX, reply, 1u);
 }
 
 int main()
@@ -68,8 +128,19 @@ int main()
     status = IpcNotify_registerClient(IPC_NOTIFY_CLIENT_ID_RP_MBOX, ipc_rp_mbox_callback, NULL);
     DebugP_assert(status==SystemP_SUCCESS);
 
-    /* Blink until a shutdown is requested */
-    gpio_led_blink_main((void *) &gbShutdown);
+    /* Blink until a shutdown is requested, handling suspend requests in between */
+    while(gbShutdown == 0u)
+    {
+        gpio_led_blink_main((void *) &gbWake);
+
+        /* Clear first, so a request arriving now runs the loop again */
+        gbWake = 0u;
+        if (gbSuspend != 0u)
+        {
+            gbSuspend = 0u;
+            lpm_suspend_reply();
+        }
+    }
 
     /* Close board and flash drivers */
     Board_driversClose();
